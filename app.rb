@@ -1,7 +1,9 @@
 require 'sinatra'
 require_relative 'my_user_model'
 
-get '/' do
+
+
+get '/users' do
     @users = User.all
     erb :index
 end
@@ -15,5 +17,13 @@ post '/users' do
         email: params[:email]
     )
     user.save
-    redirect '/'
+    redirect '/users'
 end
+
+get '/users/new' do
+    erb :new
+end
+
+get '/*' do
+    "404 Not Found"
+  end
