@@ -1,0 +1,23 @@
+<h1>Users</h1>
+         <table>
+            <thead>
+                  <tr>
+                     <th>FirstName</th>
+                     <th>LastName</th>
+                     <th>Age</th>
+                     <th>Email</th>
+                  </tr>
+            </thead> 
+            <tbody>
+               <% @users.each do |user| %>
+                  <tr>
+                     <td><%= user.firstname %></td>
+                     <td><%=user.lastname %></td>
+                     <td><%=user.age %></td>
+                     <td><%=user.email %></td>
+                     <td><%=link_to 'Edit', edit_user_path(user) %></td>
+                     <td><%= button_to 'Delete', user, method: :delete %></td>
+                  </tr>
+               <% end %>
+            </tbody>
+        </table>
