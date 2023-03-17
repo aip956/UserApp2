@@ -7,4 +7,14 @@ ActiveRecord::Base.establish_connection(
 class User < ActiveRecord::Base
     self.table_name = 'users'
     validates_presence_of :firstname, :lastname, :age, :password, :email
+
+    def self.authenticate(email, password)
+        user = find_by(email: email)
+        if user && user.password == password
+          user
+        else
+          nil
+        end
+      end
+      
 end

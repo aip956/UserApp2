@@ -1,0 +1,19 @@
+<h1>Please Sign In</h1>
+
+<% if @error_message %>
+    <p><%= @error_message %></p>
+<% end %>
+
+<form method="post" action="/sign_in">
+    <div>
+        <label for="email">Email: </label>
+        <input type="email" id="email" name="email" required>
+    </div>  
+    <div>
+        <label for="password">Password: </label>
+        <input type="password" id="password" name="password" required>
+    </div> 
+    <div>
+        <input type="submit" value="Sign In">
+    </div> 
+</form>
