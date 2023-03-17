@@ -17,7 +17,7 @@ post '/users' do
         email: params[:email]
     )
     user.save
-    redirect '/users'
+    redirect '/'
 end
 
 get '/users/new' do
