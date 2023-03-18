@@ -1,10 +1,8 @@
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'vendor', 'gems', 'sinatra-authentication-0.4.1', 'lib'))
-
-require 'sinatra/base'
-require 'sinatra/flash'
-require 'sinatra/authorization'
-require_relative 'my_user_model'
+require 'sinatra'
+require 'sinatra/reloader' if development?
+require 'sqlite3'
 require 'bcrypt'
+require_relative 'my_user_model'
 
 enable :sessions
 
@@ -43,13 +41,16 @@ POST on /sign_in. Receiving email and password.
 It will add a session containing the user_id in
 order to be logged in and returns the user created
 (without password).
-=end
+
 # Get /sign_in
 get '/sign_in' do
     erb :sign_in
 end
 
+=end
+
 # POST /sign_in
+=begin
 post '/sign_in' do
     email = params[:email]
     password = params[:password]
@@ -65,7 +66,9 @@ post '/sign_in' do
         erb :sign_in
     end
 end
+=end
 
+=begin
 # GET /dashboard
 get '/dashboard' do
     # Validate user signed in
@@ -75,7 +78,9 @@ get '/dashboard' do
         redirect 'sign_in'
     end
 end
+=end
 
+=begin
 # PUT /users/:id
 put '/users/:id' do |id|
     # Validate user signed in
@@ -100,24 +105,29 @@ put '/users/:id' do |id|
         redirect '/sign_in'
     end
 end
-
+=end
 
 # Authenticate! method
+=begin
 helpers do
-    def authenticate!
-        redirect 'sign_in' unless sign_in?
+    #def authenticate!
+        #redirect 'sign_in' unless sign_in?
+    #end
+
+    # Helper method to check if user is signed in
+    def signed_in?
+        !session[:user_id].nil?
+    end
+
+    # Helper method to get the current user
+    def current_user
+        User.find(session[:user_id])
     end
 end
+=end
 
-# Helper method to check if user is signed in
-def signed_in?
-    !session[:user_id].nil?
-end
 
-# Helper method to get the current user
-def current_user
-    User.find(session[:user_id])
-end
+
 
 
 get '/*' do
