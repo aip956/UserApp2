@@ -26,6 +26,7 @@ GEM
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     minitest (5.18.0)
+    multi_json (1.15.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
     public_suffix (5.0.1)
@@ -50,6 +51,12 @@ GEM
       rufus-tokyo
       sinatra
       sinbook
+    sinatra-contrib (3.0.5)
+      multi_json
+      mustermann (~> 3.0)
+      rack-protection (= 3.0.5)
+      sinatra (= 3.0.5)
+      tilt (~> 2.0)
     sinbook (0.1.9)
       yajl-ruby
     sqlite3 (1.6.1-arm64-darwin)
@@ -66,6 +73,7 @@ DEPENDENCIES
   bcrypt
   sinatra
   sinatra-authentication
+  sinatra-contrib
   sqlite3
 
 BUNDLED WITH

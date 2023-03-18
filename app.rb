@@ -1,8 +1,11 @@
-require 'sinatra'
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'vendor', 'gems', 'sinatra-authentication-0.4.1', 'lib'))
+
+require 'sinatra/base'
 require 'sinatra/flash'
-require 'sinatra/authentication'
-require 'bcrypt'
+require 'sinatra/authorization'
 require_relative 'my_user_model'
+require 'bcrypt'
+
 enable :sessions
 
 # GET on /users. This action will 
@@ -115,8 +118,6 @@ end
 def current_user
     User.find(session[:user_id])
 end
-
-
 
 
 get '/*' do

@@ -1,4 +1,5 @@
 require 'active_record'
+require 'sinatra/authentication'
 
 ActiveRecord::Base.establish_connection(
     adapter: 'sqlite3',
@@ -16,5 +17,4 @@ class User < ActiveRecord::Base
           nil
         end
       end
-      
 end
