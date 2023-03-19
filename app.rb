@@ -1,16 +1,25 @@
 require 'sinatra'
-require 'sinatra/reloader' if development?
 require 'sqlite3'
 require 'bcrypt'
 require_relative 'my_user_model'
 
+user_model = User.new
 enable :sessions
+
 
 # GET on /users. This action will 
 # return all users (without their passwords).
 get '/users' do
-    @users = User.all
-    erb :index
+    users = user_model.all_users
+    # @users = User.all
+    # erb :index
+    users.to_json
+end
+
+get '/users/:id' do
+    id = params[:id]
+    user = user_model.find_user(id)
+    user.to_json
 end
 
 =begin
@@ -21,20 +30,39 @@ database and returns the user created
 (without password).
 =end
 post '/users' do
-    user = User.new(
-        firstname: params[:firstname],
-        lastname: params[:lastname],
-        age: params[:age],
-        password: params[:password],
-        email: params[:email]
-    )
-    user.save
+    firstname = params["firstname"]
+    lastname = params["lastname"]
+    age = params["age"]
+    password = params["password"]
+    email = params["email"]
+    user_model.add_user(firstname, lastname, age, password, email)
     redirect '/users'
 end
 
-get '/users/new' do
-    erb :new
+delete '/users/:id' do
+    id = params[:id]
+    user_model.delete_user(id)
+    redirect '/users'
 end
+
+
+    # request.body.rewind
+    # user = User.new(
+    #     firstname: params[:'firstname'],
+    #     lastname: params[:'lastname'],
+    #     age: params[:'age'],
+    #     password: params[:'password'],
+    #     email: params[:'email']
+    # )
+    # user.save
+    # content_type :to_json
+    # user.to_json(except: :password)
+#     redirect '/users'
+# end
+
+# get '/users/new' do
+#     erb :new
+# end
 
 =begin
 POST on /sign_in. Receiving email and password. 
@@ -107,24 +135,7 @@ put '/users/:id' do |id|
 end
 =end
 
-# Authenticate! method
-=begin
-helpers do
-    #def authenticate!
-        #redirect 'sign_in' unless sign_in?
-    #end
 
-    # Helper method to check if user is signed in
-    def signed_in?
-        !session[:user_id].nil?
-    end
-
-    # Helper method to get the current user
-    def current_user
-        User.find(session[:user_id])
-    end
-end
-=end
 
 
 
@@ -132,4 +143,4 @@ end
 
 get '/*' do
     "404 Not Found"
-  end
+end
