@@ -1,7 +1,5 @@
 require 'sqlite3'
 
-# ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'db.sql')
-
 class User 
   def initialize
     @db =SQLite3::Database.open("db.sql")
@@ -32,22 +30,20 @@ class User
     @db.execute("SELECT * FROM users WHERE id = ?", id).first
   end
 
+  def authenticate(email, password)
+    user = @db.execute("SELECT * FROM users WHERE email = ? AND password = ?", [email, password]).first
+    user
+  end
+
+  def update_password(id, new_password)
+    @db.execute("UPDATE users SET password = ? WHERE id = ?", [new_password, id])
+    find_user(id)
+  end
+
   def delete_user(id)
-    @db.execute("DELET * FROM users WHERE id = ?", id)
+    @db.execute("DELETE * FROM users WHERE id = ?", id)
   end
 end
 
 
-  #self.table_name = 'users'
-# validates_presence_of :firstname, :lastname, :age, :password, :email
 
-    # def self.authenticate(email, password)
-    #     user = find_by(email: email)
-    #     if user && user.password == password
-    #       user
-    #     else
-    #       nil
-    #     end
-    # end
-
-# end

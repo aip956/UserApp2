@@ -3,24 +3,26 @@ require 'sqlite3'
 require 'bcrypt'
 require_relative 'my_user_model'
 
-user_model = User.new
+
 enable :sessions
 
+user_model = User.new
 
-# GET on /users. This action will 
-# return all users (without their passwords).
+
 get '/users' do
     users = user_model.all_users
     # @users = User.all
     # erb :index
-    users.to_json
+    users.to_json(:except => :password)
 end
 
-get '/users/:id' do
-    id = params[:id]
-    user = user_model.find_user(id)
-    user.to_json
+
+
+# Before filter to check if the user is signed in
+before '/users/*' do
+    redirect '/sign_in' unless session[:user_id] || request.path_info == '/sign_in'
 end
+
 
 =begin
 POST on /users. Receiving firstname, 
@@ -29,6 +31,30 @@ It will create a user and store in your
 database and returns the user created 
 (without password).
 =end
+post '/sign_in' do
+    email = params[:email]
+    password = params[:password]
+    user = user_model.authenticate(email, password)
+    if user
+        session[:user_id] = user['id']
+        user.to_json(:except => :password)
+    else
+        status 401
+    end
+end
+
+get '/sign_in' do
+    erb :sign_in
+end
+
+put '/users' do
+    user_id = session[:user_id]
+    new_password = params[:new_password]
+    user = user_model.update_password(user_id, new_password)
+    user.to_json(:except => :password)
+end
+
+
 post '/users' do
     firstname = params["firstname"]
     lastname = params["lastname"]
@@ -38,6 +64,16 @@ post '/users' do
     user_model.add_user(firstname, lastname, age, password, email)
     redirect '/users'
 end
+
+
+
+get '/users/:id' do
+    id = params[:id]
+    user = user_model.find_user(id)
+    user.to_json
+end
+
+
 
 delete '/users/:id' do
     id = params[:id]
