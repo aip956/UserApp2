@@ -21,7 +21,7 @@ class User
     @db.execute("SELECT * FROM users")
   end
 
-  def add_user(firstname, lastname, age, password, email)
+  def create(firstname, lastname, age, password, email)
     @db.execute("INSERT INTO users(firstname, lastname, age, password, email) VALUES(?, ?, ?, ?, ?)",
     firstname, lastname, age, password, email)
   end

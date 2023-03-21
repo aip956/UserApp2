@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 gem 'sinatra'
-gem 'activerecord'
+gem 'json'
 gem 'sqlite3'
-gem 'sinatra-authentication'
-gem 'bcrypt'
-gem 'sinatra-contrib'
+
+

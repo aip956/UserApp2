@@ -1,10 +1,12 @@
 require 'sinatra'
 require 'sqlite3'
-require 'bcrypt'
+require 'json'
 require_relative 'my_user_model'
 
 
 enable :sessions
+set :port, 8080
+set('views', './views')
 
 user_model = User.new
 
@@ -78,7 +80,7 @@ post '/users' do
     age = params["age"]
     password = params["password"]
     email = params["email"]
-    user_model.add_user(firstname, lastname, age, password, email)
+    user_model.create(firstname, lastname, age, password, email)
     redirect '/users'
 end
 
