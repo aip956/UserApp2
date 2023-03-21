@@ -31,7 +31,10 @@ class User
   end
 
   def authenticate(email, password)
+    puts "Email: #{email}"
+    puts "Password: #{password}"
     user = @db.execute("SELECT * FROM users WHERE email = ? AND password = ?", [email, password]).first
+    puts "User: #{user.inspect}"
     user
   end
 

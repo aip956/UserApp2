@@ -8,7 +8,8 @@ enable :sessions
 
 user_model = User.new
 
-
+# GET on /users. This action will 
+# return all users (without their passwords).
 get '/users' do
     users = user_model.all_users
     # @users = User.all
@@ -32,9 +33,16 @@ database and returns the user created
 (without password).
 =end
 post '/sign_in' do
-    email = params[:email]
-    password = params[:password]
+    request.body.rewind
+    data = JSON.parse(request.body.read)
+    # email = params[:email]
+    # password = params[:password]
+    email = data["email"]
+    password = data["password"]
+    puts "Email: #{email}"
+    puts "Password: #{password}"
     user = user_model.authenticate(email, password)
+    puts "User_app.rb: #{user.inspect}"
     if user
         session[:user_id] = user['id']
         user.to_json(:except => :password)
@@ -47,13 +55,22 @@ get '/sign_in' do
     erb :sign_in
 end
 
-put '/users' do
-    user_id = session[:user_id]
-    new_password = params[:new_password]
-    user = user_model.update_password(user_id, new_password)
-    user.to_json(:except => :password)
-end
-
+# put '/users' do
+#     puts "Received PUT request to /users endpoint"
+#     puts "Request body: #{request.body.read}"
+#     user_id = session[:user_id]
+#     new_password = params[:new_password]
+#     user = user_model.update_password(user_id, new_password)
+#     puts "New password: #{:new_password}"
+#     puts "done"
+#     user.to_json(:except => :password)
+# end
+put '/users/:id' do
+    id = params[:id]
+    data = JSON.parse(request.body.read)
+    new_password = data["password"]
+    user_model.update_password(id, new_password).to_json(:except => :password)
+  end
 
 post '/users' do
     firstname = params["firstname"]
@@ -65,15 +82,11 @@ post '/users' do
     redirect '/users'
 end
 
-
-
 get '/users/:id' do
     id = params[:id]
     user = user_model.find_user(id)
     user.to_json
 end
-
-
 
 delete '/users/:id' do
     id = params[:id]
@@ -82,23 +95,7 @@ delete '/users/:id' do
 end
 
 
-    # request.body.rewind
-    # user = User.new(
-    #     firstname: params[:'firstname'],
-    #     lastname: params[:'lastname'],
-    #     age: params[:'age'],
-    #     password: params[:'password'],
-    #     email: params[:'email']
-    # )
-    # user.save
-    # content_type :to_json
-    # user.to_json(except: :password)
-#     redirect '/users'
-# end
-
-# get '/users/new' do
-#     erb :new
-# end
+    
 
 =begin
 POST on /sign_in. Receiving email and password. 
@@ -131,49 +128,6 @@ post '/sign_in' do
     end
 end
 =end
-
-=begin
-# GET /dashboard
-get '/dashboard' do
-    # Validate user signed in
-    if signed_in?
-        erb :dashboard
-    else
-        redirect 'sign_in'
-    end
-end
-=end
-
-=begin
-# PUT /users/:id
-put '/users/:id' do |id|
-    # Validate user signed in
-    if signed_in?
-        authenticate!
-# Validate current user same as updated user
-        if current_user.id == id.to_i
-            email = params[:email]
-            password = params[:password]
-
-            # Update user's email
-            user = User.find(id)
-            user.email = email
-            user.save
-
-        # Return updated user w/o password
-            { id: user.id, email: user.email }.to_json
-        else
-            status 403
-        end
-    else
-        redirect '/sign_in'
-    end
-end
-=end
-
-
-
-
 
 
 
