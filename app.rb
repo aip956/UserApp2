@@ -11,10 +11,10 @@ user_model = User.new
 # GET on /users. This action will 
 # return all users (without their passwords).
 get '/users' do
-    users = user_model.all_users
+    @users = user_model.all_users
     # @users = User.all
-    # erb :index
-    users.to_json(:except => :password)
+    erb :index, locals: { users: @users } 
+    # users.to_json(:except => :password)
 end
 
 
