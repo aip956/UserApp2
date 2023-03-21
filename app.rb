@@ -88,12 +88,21 @@ get '/users/:id' do
     user.to_json
 end
 
+# delete '/users/:id' do
+#     id = params[:id]
+#     user_model.delete_user(id)
+#     redirect '/users'
+# end
+
 delete '/users/:id' do
     id = params[:id]
+    user_id = session[:user_id]
+    if id.to_i == user_id.to_i
+        session[:user_id] = nil
+    end
     user_model.delete_user(id)
-    redirect '/users'
+    status 204
 end
-
 
     
 

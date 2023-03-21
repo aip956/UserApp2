@@ -44,7 +44,7 @@ class User
   end
 
   def delete_user(id)
-    @db.execute("DELETE * FROM users WHERE id = ?", id)
+    @db.execute("DELETE FROM users WHERE id = ?", id)
   end
 end
 
